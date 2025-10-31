@@ -1,0 +1,7 @@
+{
+  "name": "Copy of EcoScan: Garbage Identifier",
+  "description": "A web application that uses your camera to identify different types of garbage, classifies them, and rewards you with points for proper disposal awareness. Track your scanning history on a personal dashboard.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
