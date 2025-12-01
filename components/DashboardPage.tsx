@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { ScannedItem, GarbageType } from '../types';
-import { IconCamera, IconRecycle, IconLeaf, IconTrash, IconBottle, IconPaper, IconMetal, IconStyrofoam } from './Icons';
+import { IconCamera, IconLeaf, IconTrash, IconBottle } from './Icons';
 import { getTierInfo } from '../tiers';
 
 interface DashboardPageProps {
@@ -12,14 +12,10 @@ interface DashboardPageProps {
 
 // FIX: Changed JSX.Element to React.ReactElement to resolve "Cannot find namespace 'JSX'" error.
 const GarbageTypeConfig: Record<GarbageType, { color: string, icon: React.ReactElement, label: string }> = {
-    [GarbageType.PLASTIC_BOTTLE]: { color: '#3498db', icon: <IconRecycle className="h-5 w-5" />, label: 'Plastic Bottle' },
-    [GarbageType.PLASTIC_WRAPPER_BAG]: { color: '#5dade2', icon: <IconRecycle className="h-5 w-5" />, label: 'Plastic Wrapper/Bag' },
-    [GarbageType.GLASS_BOTTLE]: { color: '#e74c3c', icon: <IconBottle className="h-5 w-5" />, label: 'Glass Bottle' },
-    [GarbageType.PAPER_CARDBOARD]: { color: '#f1c40f', icon: <IconPaper className="h-5 w-5" />, label: 'Paper/Cardboard' },
-    [GarbageType.METAL_SCRAP]: { color: '#95a5a6', icon: <IconMetal className="h-5 w-5" />, label: 'Metal Scrap' },
-    [GarbageType.BIODEGRADABLE]: { color: '#2ecc71', icon: <IconLeaf className="h-5 w-5" />, label: 'Biodegradable' },
-    [GarbageType.STYROFOAM]: { color: '#ecf0f1', icon: <IconStyrofoam className="h-5 w-5" />, label: 'Styrofoam' },
-    [GarbageType.GENERAL_WASTE]: { color: '#7f8c8d', icon: <IconTrash className="h-5 w-5" />, label: 'General Waste' },
+    [GarbageType.BIODEGRADABLE]: { color: '#27ae60', icon: <IconLeaf className="h-5 w-5" />, label: 'Biodegradable' },
+    [GarbageType.NON_BIODEGRADABLE]: { color: '#2980b9', icon: <IconBottle className="h-5 w-5" />, label: 'Non-Biodegradable' },
+    [GarbageType.SPECIAL]: { color: '#ff5733', icon: <IconTrash className="h-5 w-5" />, label: 'Special' },
+    [GarbageType.RESIDUAL]: { color: '#7f8c8d', icon: <IconTrash className="h-5 w-5" />, label: 'Residual' }, 
 };
 
 const ScannedItemCard: React.FC<{ item: ScannedItem }> = ({ item }) => {

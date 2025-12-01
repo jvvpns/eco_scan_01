@@ -1,9 +1,16 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { identifyGarbage, GarbageIdentificationResult } from '../services/geminiService';
 import { IconCamera, IconArrowLeft, IconUpload, IconRecycle, IconTrash } from './Icons';
+import { GarbageType } from '../types';
 
 interface ScanPageProps {
-  onScanComplete: (item: { name: string, type: any, points: number, image: string }) => void;
+  onScanComplete: (item: { 
+    name: string;
+    type: GarbageType;
+    points: number;
+    image: string;
+    description?: string;
+  }) => void;
   onBack: () => void;
 }
 
@@ -97,12 +104,13 @@ const ScanPage: React.FC<ScanPageProps> = ({ onScanComplete, onBack }) => {
       const base64Data = imagePreview.split(',')[1];
       const result = await identifyGarbage(base64Data);
       
-      // Critical Fix: Map the API response fields (itemName, garbageType) to the app's state fields (name, type)
+      // Map the API response to the expected format
       onScanComplete({
           name: result.itemName,
           type: result.garbageType,
           points: result.points,
-          image: imagePreview
+          image: imagePreview,
+          description: result.description
       });
 
       onBack();

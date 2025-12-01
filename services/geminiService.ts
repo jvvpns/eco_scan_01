@@ -5,18 +5,15 @@ export interface GarbageIdentificationResult {
     itemName: string;
     garbageType: GarbageType;
     points: number;
+    description?: string;
 }
 
-// Define a consistent point system for each garbage type
+// Define a consistent point system for each garbage category
 const pointsMap: Record<GarbageType, number> = {
-    [GarbageType.PLASTIC_BOTTLE]: 10,
-    [GarbageType.PLASTIC_WRAPPER_BAG]: 10,
-    [GarbageType.GLASS_BOTTLE]: 25,
-    [GarbageType.PAPER_CARDBOARD]: 10,
-    [GarbageType.METAL_SCRAP]: 30,
-    [GarbageType.BIODEGRADABLE]: 15,
-    [GarbageType.STYROFOAM]: 20,
-    [GarbageType.GENERAL_WASTE]: 2,
+    [GarbageType.SPECIAL]: 15,              // e-waste, batteries, hazardous
+    [GarbageType.NON_BIODEGRADABLE]: 12,    // plastics, metals, glass
+    [GarbageType.BIODEGRADABLE]: 10,        // food waste, organic, paper
+    [GarbageType.RESIDUAL]: 5,             // mixed/other waste
 };
 
 export const identifyGarbage = async (base64Image: string): Promise<GarbageIdentificationResult> => {
@@ -38,25 +35,38 @@ export const identifyGarbage = async (base64Image: string): Promise<GarbageIdent
                         },
                     },
                     {
-                        text: `Analyze the primary object in the foreground of this image, ignoring any background clutter. Identify the object by its common name and classify it into one of the following specific garbage types: ${Object.values(GarbageType).join(', ')}. If it doesn't fit any category, classify it as 'GENERAL_WASTE'.`,
+                        text: `Analyze the primary object in the foreground of this image, ignoring any background clutter. 
+                        
+Identify and classify it into one of these waste categories:
+
+1. **Special** - Electronic waste (phones, batteries, light bulbs), hazardous materials (chemicals, paint, medical waste)
+2. **Non-Biodegradable** - Plastics (bottles, bags, wrappers), metals (cans, foil), glass (bottles, jars), rubber, styrofoam
+3. **Biodegradable** - Food waste, organic materials (leaves, grass), paper, cardboard, wood
+4. **Residual** - Mixed waste, soiled materials, ceramics, or items that don't clearly fit other categories
+
+Provide the item name and its category.`,
                     }
                 ],
             },
             config: {
-                systemInstruction: "You are an expert waste classification system. Your sole purpose is to identify the main object in an image and classify it into a specific waste type from the provided list. Provide a JSON response based strictly on the provided schema without any extra explanation.",
+                systemInstruction: "You are an expert waste classification system. Your sole purpose is to identify the main object in an image and classify it into one of four waste categories: Special, Non-Biodegradable, Biodegradable, or Residual. Provide a JSON response based strictly on the provided schema without any extra explanation.",
                 responseMimeType: "application/json",
                 responseSchema: {
                     type: Type.OBJECT,
                     properties: {
                         itemName: {
                             type: Type.STRING,
-                            description: 'The name of the identified item (e.g., "Plastic Water Bottle", "Banana Peel", "Aluminum Can").'
+                            description: 'The name of the identified item (e.g., "Plastic Water Bottle", "Banana Peel", "AA Battery").'
                         },
                         garbageType: {
                             type: Type.STRING,
                             enum: Object.values(GarbageType),
-                            description: "The specific classification of the garbage."
+                            description: "The waste category: Special, Non-Biodegradable, Biodegradable, or Residual."
                         },
+                        description: {
+                            type: Type.STRING,
+                            description: "Brief explanation of why it belongs to this category."
+                        }
                     },
                     required: ["itemName", "garbageType"]
                 },
@@ -76,6 +86,7 @@ export const identifyGarbage = async (base64Image: string): Promise<GarbageIdent
             itemName: apiResult.itemName,
             garbageType: apiResult.garbageType,
             points: points,
+            description: apiResult.description,
         };
 
     } catch (error) {
@@ -88,7 +99,7 @@ export const identifyGarbage = async (base64Image: string): Promise<GarbageIdent
                  throw new Error("The scanning service is temporarily unavailable due to an authentication issue.");
             }
             if (error.message.startsWith('The service returned an unknown')) {
-                throw error; // Rethrow our custom validation error
+                throw error;
             }
         }
         

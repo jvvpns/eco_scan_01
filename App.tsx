@@ -17,9 +17,9 @@ function App() {
 
   const user = {
     userId: 'eco-scan-001',
-    name: 'Jesse Jot Auman',
-    username: 'jessej',
-    email: 'jessejot1101@gmail.com',
+    name: 'Sample User',
+    username: 'sampleuser',
+    email: 'sampleuser@gmail.com',
     image: `https://i.pravatar.cc/150?u=${encodeURIComponent('jessejot1101@gmail.com')}`,
   };
 

@@ -8,14 +8,10 @@ export enum Page {
 }
 
 export enum GarbageType {
-    PLASTIC_BOTTLE = 'PLASTIC_BOTTLE',
-    PLASTIC_WRAPPER_BAG = 'PLASTIC_WRAPPER_BAG',
-    GLASS_BOTTLE = 'GLASS_BOTTLE',
-    PAPER_CARDBOARD = 'PAPER_CARDBOARD',
-    METAL_SCRAP = 'METAL_SCRAP',
-    BIODEGRADABLE = 'BIODEGRADABLE',
-    STYROFOAM = 'STYROFOAM',
-    GENERAL_WASTE = 'GENERAL_WASTE',
+    SPECIAL = 'Special',
+    NON_BIODEGRADABLE = 'Non-Biodegradable',
+    BIODEGRADABLE = 'Biodegradable',
+    RESIDUAL = 'Residual',
 }
 
 export interface ScannedItem {
